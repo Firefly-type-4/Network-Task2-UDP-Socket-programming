@@ -83,10 +83,11 @@ def main():
                     received_bytes += data_len
                     log(f"数据按序接收，更新预期序列号为：{expected_seq}")
                 
-                # 发送确认报文
-                ack_header = struct.pack("!BHHHB", 0x04, 0, 0, expected_seq, 0)
-                server_socket.sendto(ack_header, addr)
-                log(f"发送确认报文，确认号：{expected_seq}")
+                # 发送确认报文（携带服务器系统时间）
+                server_time = datetime.now().strftime("%H-%M-%S")
+                ack_header = struct.pack("!BHHHB", 0x04, 0, 0, expected_seq, len(server_time))
+                server_socket.sendto(ack_header + server_time.encode("utf-8"), addr)
+                log(f"发送确认报文，确认号：{expected_seq}，服务器时间：{server_time}")
             
             # 处理断开连接请求
             elif msg_type == 0x05 and is_connected and addr == client_addr:
@@ -105,6 +106,7 @@ def main():
 
 if __name__ == "__main__":
     main()
-
+    
 
     #  python udpserver.py
+    #  wireshark filter: udp.port == 10000
