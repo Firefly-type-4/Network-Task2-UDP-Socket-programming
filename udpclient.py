@@ -226,5 +226,5 @@ if __name__ == "__main__":
     main()
 
 
-    #  python udpclient.py 127.0.0.1 10000
+    #  python udpclient.py 192.168.26.130 10000
     #  virtual machine:  python udpclient.py 192.168.26.130 10000
